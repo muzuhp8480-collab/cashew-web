@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROYAL CASHEW | 3D Cinematic Scroll Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- PRELOADER -->
+  <div id="preloader" class="preloader">
+    <div class="preloader-content">
+      <div class="preloader-brand">
+        <span class="leaf-icon">✦</span>
+        <span class="brand-text">ROYAL CASHEW</span>
+      </div>
+      <div class="preloader-meter">
+        <div class="meter-bar" id="meterBar"></div>
+      </div>
+      <div class="preloader-status">
+        <span class="status-label" id="statusLabel">Harvesting visual frames...</span>
+        <span class="status-percent" id="statusPercent">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP PROGRESS BAR -->
+  <div class="scroll-progress-line" id="scrollProgressLine"></div>
+
+  <!-- NAVIGATION -->
+  <header class="site-header">
+    <a href="#" class="nav-logo">
+      <span class="gold-symbol">✦</span>
+      <span class="logo-title">ROYAL CASHEW</span>
+      <span class="logo-subtitle">EST. 1928</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#origin" class="nav-item active">The Orchard</a>
+      <a href="#process" class="nav-item">Artisan Craft</a>
+      <a href="#collection" class="nav-item">Our Harvest</a>
+      <a href="#story" class="nav-item">Heritage</a>
+    </nav>
+    <div class="nav-actions">
+      <!-- Quality Selector Toggle -->
+      <button class="nav-pill-btn" id="qualityToggle" title="Toggle Frame Asset Quality">
+        <span class="pill-dot" style="background: #e5aa42; box-shadow: 0 0 6px #e5aa42;"></span>
+        <span id="qualityLabel">3D VIDEO (PNG)</span>
+      </button>
+      <!-- Sound Toggle -->
+      <button class="nav-pill-btn sound-btn" id="soundToggle" title="Toggle Orchard Atmosphere Sound">
+        <span class="sound-icon" id="soundIcon">🔇</span>
+        <span>SOUND</span>
+      </button>
+      <a href="#order" class="cta-primary-sm">ORDER HARVEST</a>
+    </div>
+  </header>
+
+  <!-- HERO SCROLL TRACK (450vh creates deep, responsive scroll scrubbing) -->
+  <main class="hero-scroll-track" id="heroScrollTrack">
+    
+    <!-- PINNED VIEWPORT (3D Canvas + Scroll-Synced Narrative Typography) -->
+    <div class="hero-sticky-viewport" id="heroSticky">
+
+      <!-- BACKGROUND 3D CANVAS -->
+      <canvas id="heroCanvas"></canvas>
+
+      <!-- CINEMATIC OVERLAYS -->
+      <div class="cinematic-vignette"></div>
+      <div class="ambient-sun-glow"></div>
+
+      <!-- INITIAL SCROLL PROMPT (Fades out when user begins scrolling) -->
+      <div class="hero-center-prompt" id="heroPrompt">
+        <div class="hero-prompt-pill">
+          <span class="hero-prompt-icon">✦</span>
+          <span class="hero-prompt-text">SCROLL TO EXPERIENCE</span>
+          <span class="hero-prompt-arrow">↓</span>
+        </div>
+      </div>
+
+      <!-- TEXT STAGE (Scroll-driven typography overlay) -->
+      <div class="text-stage">
+        
+        <!-- HERO CARD: Pops up at 20% scroll, stays pinned without scrolling for remainder of hero section -->
+        <article class="text-card" id="heroCard">
+          <h1 class="card-headline">
+            King Jumbo W-180 <br /><span class="gold-gradient">Royal Cashews</span>
+          </h1>
+          <p class="card-body">
+            Taste the pinnacle of cashews. Hand-selected whole crescent kernels from mountain-fed groves, slow-roasted to natural perfection and vacuum-sealed at the grove to lock in pristine freshness and buttery crunch.
+          </p>
+          <div class="card-stats">
+            <div class="stat-item">
+              <span class="stat-num">W-180</span>
+              <span class="stat-label">King Grade</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-num">100%</span>
+              <span class="stat-label">Single Origin</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-num">0%</span>
+              <span class="stat-label">Additives</span>
+            </div>
+          </div>
+          <div class="cta-button-group" style="margin-top: 24px;">
+            <a href="#collection" class="btn-primary-gold">
+              <span>ORDER RESERVE HARVEST</span>
+              <span>✦</span>
+            </a>
+            <a href="#process" class="btn-secondary-glass">
+              <span>EXPLORE HARVEST</span>
+            </a>
+          </div>
+          <div class="purity-badge-row">
+            <span class="badge-tag">✦ NON-GMO</span>
+            <span class="badge-tag">✦ 100% ORGANIC</span>
+            <span class="badge-tag">✦ DIRECT TRADE</span>
+            <span class="badge-tag">✦ ZERO PRESERVATIVES</span>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- HERO HUD (Scrubber & Playback Controls) -->
+      <div class="hero-hud">
+        <div class="hud-left">
+          <button class="hud-autoplay-btn" id="autoplayBtn" title="Toggle 3D Autoplay Scrubbing">
+            <span id="playIcon">▶</span>
+            <span id="playLabel">AUTOPLAY</span>
+          </button>
+          <div class="scroll-helper">
+            <div class="mouse-icon">
+              <div class="mouse-wheel"></div>
+            </div>
+            <span>SCROLL TO SCRUB</span>
+          </div>
+        </div>
+
+        <div class="hud-center">
+          <div class="timeline-container">
+            <span class="timeline-label">TIMELINE</span>
+            <input type="range" class="timeline-slider" id="timelineScrubber" min="0" max="299" value="0" aria-label="Timeline Scrubber">
+            <span class="timeline-label" id="hudFrame">001 / 300</span>
+          </div>
+        </div>
+
+        <div class="hud-right">
+          <div class="hud-stat-pill">
+            <span class="stat-prefix">SCENE</span>
+            <span class="stat-value" id="hudScene">00 / 01 • THE ORCHARD</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- CONTENT SECTION CONTINUATION (Flows smoothly after hero) -->
+  <section class="section-showcase" id="process">
+    <div class="container">
+      
+      <div class="section-header text-center">
+        <span class="section-badge">NATURE'S FINEST SUPERFOOD</span>
+        <h2 class="section-title">Why Royal Cashews Stand Alone</h2>
+        <p class="section-subtitle">
+          Obsessive cultivation, single-estate traceability, and artisanal gentle roasting produce an unparalleled culinary experience.
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🌳</div>
+          <h3 class="feature-title">Pure Terroir</h3>
+          <p class="feature-desc">
+            Harvested exclusively from mountain-fed groves where high altitude sun and red loam soils yield larger, naturally sweeter nuts.
+          </p>
+        </div>
+
+        <div class="feature-card highlighted">
+          <div class="feature-icon">👑</div>
+          <h3 class="feature-title">King Jumbo W-180</h3>
+          <p class="feature-desc">
+            Only 150 to 180 whole kernels per pound. Remarkably plumper, denser, and bursting with rich natural cashew oils.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <h3 class="feature-title">Slow Roasted</h3>
+          <p class="feature-desc">
+            Crafted with zero industrial additives, hydrogenated oils, or artificial preservatives. Pure kernel, pure crunch.
+          </p>
+        </div>
+      </div>
+
+      <!-- PRODUCTS & PRICING SECTION -->
+      <div class="products-showcase-container" id="collection">
+        
+        <div class="products-section-header text-center">
+          <span class="section-badge">DIRECT ESTATE HARVEST • KING JUMBO RESERVES</span>
+          <h2 class="section-title">Reserve Cashew Collection & Prices</h2>
+          <p class="section-subtitle">
+            Select your preferred grade and weight. Hand-sorted King Jumbo kernels, delivered fresh from our mountain groves with zero middlemen.
+          </p>
+
+          <!-- CATEGORY FILTER TABS -->
+          <div class="product-filter-tabs">
+            <button type="button" class="filter-tab active" data-filter="all">All Harvests</button>
+            <button type="button" class="filter-tab" data-filter="raw">Raw Mountain</button>
+            <button type="button" class="filter-tab" data-filter="roasted">Slow-Roasted</button>
+            <button type="button" class="filter-tab" data-filter="flavored">Artisan Flavors</button>
+            <button type="button" class="filter-tab" data-filter="gift">Gift Sets</button>
+          </div>
+        </div>
+
+        <!-- PRODUCTS GRID -->
+        <div class="products-grid">
+          
+          <!-- Product 1: Featured Spotlight with Image on the Right Side -->
+          <article class="product-card featured-product-card" data-category="roasted" data-name="Slow-Roasted Golden Himalayan Sea Salt">
+            <div class="featured-card-layout">
+              <!-- Left Side: Product Details & Add to Cart -->
+              <div class="featured-product-details">
+                <div class="product-card-top">
+                  <div class="product-badge-group">
+                    <span class="product-tag bestseller">BESTSELLER</span>
+                    <span class="product-tag signature">CHEF'S CHOICE</span>
+                  </div>
+                  <span class="product-grade-badge">GRADE W-180 JUMBO</span>
+                </div>
+                
+                <div class="product-rating">
+                  <span class="stars">★★★★★</span>
+                  <span class="rating-count">5.0 (184 reviews)</span>
+                </div>
+
+                <h3 class="product-name featured-name">Slow-Roasted Golden Himalayan Sea Salt</h3>
+                <p class="product-meta featured-meta">
+                  Gently dry hot-air roasted with zero added industrial oils. Seasoned with hand-harvested pink mineral sea salt from pristine mountain groves for an unmistakable buttery snap and rich natural aroma.
+                </p>
+
+                <div class="product-highlights-row">
+                  <span class="highlight-chip">✦ Dry Hot-Air Roasted</span>
+                  <span class="highlight-chip">✦ Pink Mineral Salt</span>
+                  <span class="highlight-chip">✦ Zero Added Oil</span>
+                </div>
+
+                <!-- Weight Variant Selection -->
+                <div class="variant-label-row">
+                  <span>Select Weight:</span>
+                  <span class="selected-weight-label">500g Eco Pouch</span>
+                </div>
+                <div class="weight-selector">
+                  <button type="button" class="weight-pill" data-weight="250g Pouch" data-price="15.00">250g</button>
+                  <button type="button" class="weight-pill active" data-weight="500g Eco Pouch" data-price="26.00">500g</button>
+                  <button type="button" class="weight-pill" data-weight="1kg Master Box" data-price="48.00">1kg</button>
+                </div>
+
+                <!-- Price & Quantity -->
+                <div class="product-action-row">
+                  <div class="price-container">
+                    <span class="price-currency">$</span>
+                    <span class="price-amount" data-unit-price="26.00">26.00</span>
+                  </div>
+                  <div class="qty-stepper">
+                    <button type="button" class="qty-btn minus" aria-label="Decrease quantity">−</button>
+                    <span class="qty-val">1</span>
+                    <button type="button" class="qty-btn plus" aria-label="Increase quantity">+</button>
+                  </div>
+                </div>
+
+                <!-- Add to Cart Button -->
+                <button type="button" class="btn-add-cart">
+                  <span class="btn-cart-icon">🛒</span>
+                  <span>Add to Cart</span>
+                </button>
+              </div>
+
+              <!-- Right Side: The Uploaded Product Packaging Image -->
+              <div class="featured-product-image-col">
+                <div class="featured-image-wrapper">
+                  <img src="images/slow-roasted-cashew.jpg" alt="Slow-Roasted Golden Himalayan Sea Salt Premium Cashews" class="product-img-display" loading="lazy" />
+                  <div class="image-floating-badge">
+                    <span class="badge-dot"></span>
+                    <span>100% NATURAL • ROASTED</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Product 2: Raw Mountain Jumbo -->
+          <article class="product-card" data-category="raw" data-name="King Jumbo W-180 Raw Mountain Cashews">
+            <div class="product-card-image-wrap">
+              <img src="images/raw-mountain-cashew.jpg" alt="King Jumbo W-180 Raw Mountain Cashews" class="product-card-img" loading="lazy" />
+              <div class="product-card-top-overlay">
+                <span class="product-tag bestseller">POPULAR</span>
+                <span class="product-grade-badge">GRADE W-180</span>
+              </div>
+              <div class="product-card-bottom-pill">100% RAW & PURE</div>
+            </div>
+
+            <div class="product-info">
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">4.9 (148 reviews)</span>
+              </div>
+              <h3 class="product-name">King Jumbo W-180 Raw Mountain Cashews</h3>
+              <p class="product-meta">Hand-picked mountain groves • Unroasted & unsalted • High natural oils</p>
+              
+              <!-- Weight Variant Selection -->
+              <div class="variant-label-row">
+                <span>Select Weight:</span>
+                <span class="selected-weight-label">500g Eco Pouch</span>
+              </div>
+              <div class="weight-selector">
+                <button type="button" class="weight-pill" data-weight="250g Pouch" data-price="14.00">250g</button>
+                <button type="button" class="weight-pill active" data-weight="500g Eco Pouch" data-price="24.00">500g</button>
+                <button type="button" class="weight-pill" data-weight="1kg Master Box" data-price="45.00">1kg</button>
+              </div>
+
+              <!-- Price & Quantity -->
+              <div class="product-action-row">
+                <div class="price-container">
+                  <span class="price-currency">$</span>
+                  <span class="price-amount" data-unit-price="24.00">24.00</span>
+                </div>
+                <div class="qty-stepper">
+                  <button type="button" class="qty-btn minus" aria-label="Decrease quantity">−</button>
+                  <span class="qty-val">1</span>
+                  <button type="button" class="qty-btn plus" aria-label="Increase quantity">+</button>
+                </div>
+              </div>
+
+              <!-- Add to Cart Button -->
+              <button type="button" class="btn-add-cart">
+                <span class="btn-cart-icon">🛒</span>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Product 3 -->
+          <article class="product-card" data-category="flavored" data-name="Wildflower Honey & Tellicherry Black Pepper">
+            <div class="product-card-image-wrap">
+              <img src="images/honey-pepper-cashew.jpg" alt="Wildflower Honey & Tellicherry Black Pepper Cashews" class="product-card-img" loading="lazy" />
+              <div class="product-card-top-overlay">
+                <span class="product-tag artisan">SIGNATURE ROAST</span>
+                <span class="product-grade-badge">GRADE W-180</span>
+              </div>
+              <div class="product-card-bottom-pill">ORGANIC GLAZED</div>
+            </div>
+
+            <div class="product-info">
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">4.8 (82 reviews)</span>
+              </div>
+              <h3 class="product-name">Wildflower Honey & Tellicherry Black Pepper</h3>
+              <p class="product-meta">Golden forest honey glaze with sun-dried Tellicherry coarse-cracked pepper</p>
+              
+              <div class="variant-label-row">
+                <span>Select Weight:</span>
+                <span class="selected-weight-label">450g Eco Pouch</span>
+              </div>
+              <div class="weight-selector">
+                <button type="button" class="weight-pill" data-weight="250g Pouch" data-price="16.50">250g</button>
+                <button type="button" class="weight-pill active" data-weight="450g Eco Pouch" data-price="28.00">450g</button>
+                <button type="button" class="weight-pill" data-weight="900g Master Box" data-price="52.00">900g</button>
+              </div>
+
+              <div class="product-action-row">
+                <div class="price-container">
+                  <span class="price-currency">$</span>
+                  <span class="price-amount" data-unit-price="28.00">28.00</span>
+                </div>
+                <div class="qty-stepper">
+                  <button type="button" class="qty-btn minus" aria-label="Decrease quantity">−</button>
+                  <span class="qty-val">1</span>
+                  <button type="button" class="qty-btn plus" aria-label="Increase quantity">+</button>
+                </div>
+              </div>
+
+              <button type="button" class="btn-add-cart">
+                <span class="btn-cart-icon">🛒</span>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Product 4 -->
+          <article class="product-card" data-category="flavored" data-name="Smoked Oak Paprika & Mountain Rosemary">
+            <div class="product-card-image-wrap">
+              <img src="images/smoked-paprika-cashew.jpg" alt="Smoked Oak Paprika & Mountain Rosemary Cashews" class="product-card-img" loading="lazy" />
+              <div class="product-card-top-overlay">
+                <span class="product-tag limited">LIMITED BATCH</span>
+                <span class="product-grade-badge">GRADE W-210</span>
+              </div>
+              <div class="product-card-bottom-pill">HERBAL INFUSION</div>
+            </div>
+
+            <div class="product-info">
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">4.9 (67 reviews)</span>
+              </div>
+              <h3 class="product-name">Smoked Oak Paprika & Mountain Rosemary</h3>
+              <p class="product-meta">Spanish smoked pimentón with aromatic dried highland rosemary leaves</p>
+              
+              <div class="variant-label-row">
+                <span>Select Weight:</span>
+                <span class="selected-weight-label">500g Eco Pouch</span>
+              </div>
+              <div class="weight-selector">
+                <button type="button" class="weight-pill" data-weight="250g Pouch" data-price="15.50">250g</button>
+                <button type="button" class="weight-pill active" data-weight="500g Eco Pouch" data-price="27.00">500g</button>
+                <button type="button" class="weight-pill" data-weight="1kg Master Box" data-price="49.00">1kg</button>
+              </div>
+
+              <div class="product-action-row">
+                <div class="price-container">
+                  <span class="price-currency">$</span>
+                  <span class="price-amount" data-unit-price="27.00">27.00</span>
+                </div>
+                <div class="qty-stepper">
+                  <button type="button" class="qty-btn minus" aria-label="Decrease quantity">−</button>
+                  <span class="qty-val">1</span>
+                  <button type="button" class="qty-btn plus" aria-label="Increase quantity">+</button>
+                </div>
+              </div>
+
+              <button type="button" class="btn-add-cart">
+                <span class="btn-cart-icon">🛒</span>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Product 5 -->
+          <article class="product-card" data-category="flavored" data-name="Estate Peri-Peri Spiced Cashews">
+            <div class="product-card-image-wrap">
+              <img src="images/peri-peri-cashew.jpg" alt="Estate Peri-Peri Spiced Cashews" class="product-card-img" loading="lazy" />
+              <div class="product-card-top-overlay">
+                <span class="product-tag spicy">BOLD SPICE</span>
+                <span class="product-grade-badge">GRADE W-210</span>
+              </div>
+              <div class="product-card-bottom-pill">VIBRANT CRUNCH</div>
+            </div>
+
+            <div class="product-info">
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">4.7 (54 reviews)</span>
+              </div>
+              <h3 class="product-name">Estate Peri-Peri Spiced Cashews</h3>
+              <p class="product-meta">Sun-dried African bird's eye chili, garlic flakes, and tangy lime zest</p>
+              
+              <div class="variant-label-row">
+                <span>Select Weight:</span>
+                <span class="selected-weight-label">500g Eco Pouch</span>
+              </div>
+              <div class="weight-selector">
+                <button type="button" class="weight-pill" data-weight="250g Pouch" data-price="14.50">250g</button>
+                <button type="button" class="weight-pill active" data-weight="500g Eco Pouch" data-price="25.00">500g</button>
+                <button type="button" class="weight-pill" data-weight="1kg Master Box" data-price="46.00">1kg</button>
+              </div>
+
+              <div class="product-action-row">
+                <div class="price-container">
+                  <span class="price-currency">$</span>
+                  <span class="price-amount" data-unit-price="25.00">25.00</span>
+                </div>
+                <div class="qty-stepper">
+                  <button type="button" class="qty-btn minus" aria-label="Decrease quantity">−</button>
+                  <span class="qty-val">1</span>
+                  <button type="button" class="qty-btn plus" aria-label="Increase quantity">+</button>
+                </div>
+              </div>
+
+              <button type="button" class="btn-add-cart">
+                <span class="btn-cart-icon">🛒</span>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Product 6 -->
+          <article class="product-card" data-category="gift" data-name="The Royal Cashew Handcrafted Wooden Gift Chest">
+            <div class="product-card-image-wrap">
+              <img src="images/gift-chest-cashew.jpg" alt="The Royal Cashew Handcrafted Wooden Gift Chest" class="product-card-img" loading="lazy" />
+              <div class="product-card-top-overlay">
+                <span class="product-tag luxury">HERITAGE GIFT</span>
+                <span class="product-grade-badge">1.2KG 4-JAR SET</span>
+              </div>
+              <div class="product-card-bottom-pill">BESPOKE WOOD CHEST</div>
+            </div>
+
+            <div class="product-info">
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">5.0 (42 reviews)</span>
+              </div>
+              <h3 class="product-name">The Royal Cashew Handcrafted Gift Chest</h3>
+              <p class="product-meta">4 signature glass decanters: Raw W-180, Salted, Honey Pepper & Smoked Paprika</p>
+              
+              <div class="variant-label-row">
+                <span>Select Weight:</span>
+                <span class="selected-weight-label">1.2kg Grand Chest</span>
+              </div>
+              <div class="weight-selector">
+                <button type="button" class="weight-pill active" data-weight="1.2kg Grand Chest" data-price="68.00">1.2kg Chest</button>
+              </div>
+
+              <div class="product-action-row">
+                <div class="price-container">
+                  <span class="price-currency">$</span>
+                  <span class="price-amount" data-unit-price="68.00">68.00</span>
+                </div>
+                <div class="qty-stepper">
+                  <button type="button" class="qty-btn minus" aria-label="Decrease quantity">−</button>
+                  <span class="qty-val">1</span>
+                  <button type="button" class="qty-btn plus" aria-label="Increase quantity">+</button>
+                </div>
+              </div>
+
+              <button type="button" class="btn-add-cart">
+                <span class="btn-cart-icon">🛒</span>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastNotification" class="toast-notification">
+    <span class="toast-icon">✓</span>
+    <span class="toast-message" id="toastMessage">Added to your harvest cart!</span>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <span class="gold-symbol">✦</span> ROYAL CASHEW CO.
+        <p class="footer-copy">Crafted with reverence for nature. Delivered fresh from our orchards.</p>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Royal Cashew Co. All rights reserved.</span>
+        <span>Cinematic 3D Canvas Scroll Engine</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
