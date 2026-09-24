@@ -30,9 +30,6 @@
   const preloader = document.getElementById('preloader');
   const heroPrompt = document.getElementById('heroPrompt');
 
-  // Hero narrative card
-  const heroCard = document.getElementById('heroCard') || document.getElementById('phase1');
-
   // HUD elements
   const hudFrame = document.getElementById('hudFrame');
   const hudScene = document.getElementById('hudScene');
@@ -415,43 +412,7 @@
     }
 
     // 2. Determine HUD scene label based on scroll progress
-    let currentSceneLabel = '00 / 01 • THE ORCHARD';
-
-    // 3. Scroll-Driven Hero Card Animation
-    if (heroCard) {
-      if (progress < 0.20) {
-        // Below 20%: zero text on screen
-        heroCard.style.opacity = '0';
-        heroCard.style.visibility = 'hidden';
-        heroCard.style.pointerEvents = 'none';
-        heroCard.style.transform = 'translateY(40px) scale(0.96)';
-        heroCard.style.filter = 'blur(8px)';
-        heroCard.classList.remove('active');
-      } else if (progress >= 0.20 && progress < 0.25) {
-        // Entrance / Popup: punchy, smooth scale & fade up from bottom
-        currentSceneLabel = '01 / 01 • ROYAL CASHEW';
-        const t = (progress - 0.20) / (0.25 - 0.20);
-        const easeOut = 1 - Math.pow(1 - t, 3);
-        const y = (1 - easeOut) * 36;
-        const blur = (1 - easeOut) * 8;
-        const scale = 0.96 + easeOut * 0.04;
-        heroCard.style.opacity = easeOut.toFixed(3);
-        heroCard.style.visibility = 'visible';
-        heroCard.style.transform = `translateY(${y.toFixed(1)}px) scale(${scale.toFixed(3)})`;
-        heroCard.style.filter = blur > 0.3 ? `blur(${blur.toFixed(1)}px)` : 'none';
-        heroCard.style.pointerEvents = easeOut > 0.7 ? 'auto' : 'none';
-        if (easeOut > 0.5) heroCard.classList.add('active'); else heroCard.classList.remove('active');
-      } else {
-        // Peak Focus: full clarity and hold - firmly pinned, no scrolling text
-        currentSceneLabel = '01 / 01 • ROYAL CASHEW';
-        heroCard.style.opacity = '1';
-        heroCard.style.visibility = 'visible';
-        heroCard.style.transform = 'translateY(0px) scale(1)';
-        heroCard.style.filter = 'none';
-        heroCard.style.pointerEvents = 'auto';
-        heroCard.classList.add('active');
-      }
-    }
+    const currentSceneLabel = progress < 0.5 ? '01 / 02 • THE ORCHARD' : '02 / 02 • ROYAL HARVEST';
 
     // Update HUD scene
     if (hudScene) {
